@@ -48,7 +48,7 @@ public class sd_ownersController {
         sd_problems newp= new sd_problems(title,desc); //Se recibe el problema a insertar a la base
         newp.setOwner(ustoadd); // El Owner encontrado por correo se asigna como atributo Owner del Problema
         ustoadd.getProblems().add(newp); //Se agrega el problema la lista de problemas que es atributo del owner
-        uService.addNew(ustoadd); // Se guarda en la base de datos de nuevo el usuario (función de JPA)
+        uService.addNew(ustoadd); // Se guarda en la base de datos de nuevo el usuario ( referirse a sdOwnersService para la función de JPA)
     }
     @GetMapping(path = "/addproblems")
     public void addOwners(@RequestParam("fn") String ofirstname, @RequestParam("ln") String olastname,
