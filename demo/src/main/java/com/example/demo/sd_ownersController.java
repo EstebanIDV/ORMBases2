@@ -39,24 +39,35 @@ public class sd_ownersController {
     @GetMapping(path = "/addproblem")
     public void addProblem(@RequestParam("email") String email, @RequestParam("title") String title,
                           @RequestParam("desc") String desc){
-        sd_owners ustoadd =(uService.getbyEmail(email)).get(0);
-        sd_problems newp= new sd_problems(title,desc);
-        newp.setOwner(ustoadd);
-        ustoadd.getProblems().add(newp);
-        uService.addNew(ustoadd);
+        /*
+            Punto #1
+            -Como implementar un objeto que representa una relacion 1 a N
+            -Referirse a sd_owners y sd_problems para entidades y relaciones
+         */
+        sd_owners ustoadd =(uService.getbyEmail(email)).get(0); // Se recibe un email para buscar el usuario y almacenarlo en un objeto
+        sd_problems newp= new sd_problems(title,desc); //Se recibe el problema a insertar a la base
+        newp.setOwner(ustoadd); // El Owner encontrado por correo se asigna como atributo Owner del Problema
+        ustoadd.getProblems().add(newp); //Se agrega el problema la lista de problemas que es atributo del owner
+        uService.addNew(ustoadd); // Se guarda en la base de datos de nuevo el usuario (función de JPA)
     }
     @GetMapping(path = "/addproblems")
     public void addOwners(@RequestParam("fn") String ofirstname, @RequestParam("ln") String olastname,
                           @RequestParam("email") String oemail, @RequestParam("pass") String opassword,
                           @RequestParam("title") List<String> title,
                           @RequestParam("desc") List<String> desc){
-        sd_owners owner = new sd_owners(ofirstname, olastname, oemail, opassword);
-        List<sd_problems> problems = new ArrayList<>();
-        for(int i=0; i<title.size();i++){
-            problems.add(new sd_problems(title.get(i),desc.get(i)));
+        /*
+            Punto #3
+            -Como implementar una transacción que afecte a más de una tabla
+            -Referirse a sd_owners y sd_problems para entidades y relaciones
+            -Referirse a sd_ownersService para ver la función transaccional
+         */
+        sd_owners owner = new sd_owners(ofirstname, olastname, oemail, opassword); //crea un nuevo owner con los parametros recibidos
+        List<sd_problems> problems = new ArrayList<>(); // crea una lista de problemas
+        for(int i=0; i<title.size();i++){ //
+            problems.add(new sd_problems(title.get(i),desc.get(i))); //agrega cada uno de los problema con n cantidad de parametros que reciba (title,description) a la lista creada
         }
-        //problems.add(new sd_problems(null, null));
-        uService.newownerandproblems(owner, problems);
+        //problems.add(new sd_problems(null, null)); //prueba rápida para demostrar que se hizo rollback al agregar al final de la lista un problem con atributos nulos
+        uService.newownerandproblems(owner, problems); //se accede a la función transaccional en sd_ownersService la cual agrega los objetos que crea en esta sección
     }
 
 }

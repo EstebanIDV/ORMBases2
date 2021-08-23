@@ -34,8 +34,13 @@ public class sd_owners{
     @Column
     private Date creationdate;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private List<sd_problems> problems = new ArrayList<>();
+    /*
+            Punto #1
+            -Como implementar un objeto que representa una relacion 1 a N
+            -Referirse a sd_ownersController para la función
+     */
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL) //Etiqueta de JPA que indica que un owner puede tener múltiples problemas el mapped by se refiere al atributo de SdProblems que representas el owner que usa como llave foranea
+    private List<sd_problems> problems = new ArrayList<>(); //Lista de Java como atributo que guarda multiples problems por cada owner
 
     public sd_owners(String Firstname, String Lastname, String Email, String Password, Boolean Enabled, String Creationdate){
         firstname = Firstname;

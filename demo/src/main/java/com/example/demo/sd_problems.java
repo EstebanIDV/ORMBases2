@@ -25,9 +25,9 @@ public class sd_problems {
     @Column
     private boolean active;
 
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "ownerid")
-    private sd_owners owner;
+    @ManyToOne (cascade = CascadeType.ALL) //Etiqueta de Java la cual indica que esta columna es propoiedad de
+    @JoinColumn (name = "ownerid") // indica la columna en la base de datos la cual es la llave foranea para relacionarse con un owner
+    private sd_owners owner; // atributo que guarda un owner para relacionar este problema con un owner
 
     public sd_problems() {
     }

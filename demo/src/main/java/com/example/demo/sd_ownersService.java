@@ -33,14 +33,24 @@ public class sd_ownersService {
 
 
 
-    @Transactional(rollbackFor = SQLException.class)
+    @Transactional(rollbackFor = SQLException.class) // Etiqueta de JPA que indica que la función es Transaccional, rollbackFor es utilizado para especificar a cuál tipo de operación debe reaccionar con un rollback (en este caso excepciones de SQL)
     public void newownerandproblems(sd_owners newowner, List<sd_problems> newproblems){
-        uRepository.save(newowner);
-        for (sd_problems newproblem : newproblems) {
-            newproblem.setOwner(newowner);
-            newowner.getProblems().add(newproblem);
+        /*
+            Punto #3
+            -Como implementar una transacción que afecte a más de una tabla
+            -Referirse a sd_owners y sd_problems para entidades y relaciones
+            -Referirse a sd_ownersControllers para ver la función la cual la utiliza.
+         */
+        //Función transaccional que añade un Owner y múltiples problems
+        //Conexion a la tabla de Owner con un repositorio JPA a esa entidad (owner)
+        uRepository.save(newowner); // Se guarda el nuevo owner, se puede eliminar y serviría igual pero al dejarlo es una prueba más de que aunque se guarda en la base previamente la transacción aún le puede hacer rollback
+        //si existiera algún error en el insert de este usuario se hace rollback pero afecta únicamente a la tabla owners
+        for (sd_problems newproblem : newproblems) { //iteración sobre múltiples problemas
+            newproblem.setOwner(newowner); //se le asigna el nuevo owner a cada problema
+            newowner.getProblems().add(newproblem); //se añade el problema a la lista de problemas producto de la relación con Owners
+            // sin importar cuántos problemas se ingresen, todos se hace rollback si se topa con alguna excepción de sql
         }
-        uRepository.save(newowner);
+        uRepository.save(newowner); //se guarda las actualizaciones del owner, corroborando que los objetos agregados cumplan con lo especificado en la base de datos, sino recibe una excepción y hace rollback
 
     }
 
